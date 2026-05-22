@@ -1,5 +1,9 @@
 # SmartAgri Setup Guide
 
+🚀 **Live Production Web Application**: [https://smartagrisystem.netlify.app/](https://smartagrisystem.netlify.app/)
+
+---
+
 SmartAgri is a comprehensive, production-ready Smart Agricultural System that combines a Flutter cross-platform mobile application with a Python FastAPI backend powered by advanced Machine Learning models.
 
 ## Prerequisites
