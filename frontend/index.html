@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmartAgri – Smart Agriculture System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     AUTH SCREEN
+══════════════════════════════════════════ -->
+<div id="authScreen" class="auth-screen">
+  <div class="auth-left">
+    <div class="auth-brand-wrap">
+      <div class="auth-leaf">🌿</div>
+      <h1 class="auth-brand">SmartAgri</h1>
+      <p class="auth-tagline">Smart Agriculture System</p>
+    </div>
+    <div class="auth-features">
+      <div class="af-item"><span>🪱</span> AI Soil Classification</div>
+      <div class="af-item"><span>📡</span> Live IoT Sensor Data</div>
+      <div class="af-item"><span>🌱</span> Crop Recommendation</div>
+      <div class="af-item"><span>🔬</span> Disease Detection</div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <!-- Login -->
+    <div id="loginPanel" class="auth-panel active">
+      <h2>Welcome back 👋</h2>
+      <p class="auth-sub">Sign in to your SmartAgri account</p>
+      <div class="auth-form">
+        <div class="af-group">
+          <label>Email / Phone</label>
+          <div class="af-input-wrap"><span>📧</span><input type="email" id="liEmail" placeholder="farmer@email.com" value="demo@farm.com"/></div>
+        </div>
+        <div class="af-group">
+          <label>Password</label>
+          <div class="af-input-wrap"><span>🔒</span><input type="password" id="liPass" placeholder="Enter password" value="demo123"/></div>
+        </div>
+        <a class="af-forgot" href="#">Forgot Password?</a>
+        <button class="af-btn" onclick="doLogin()">Login</button>
+        <div class="af-divider"><span>or</span></div>
+        <button class="af-btn-outline" onclick="switchAuth('signup')">Create New Account</button>
+      </div>
+      <div class="demo-hint">🚀 Demo credentials filled — just click Login</div>
+    </div>
+    <!-- Signup -->
+    <div id="signupPanel" class="auth-panel">
+      <h2>Join SmartAgri 🌾</h2>
+      <p class="auth-sub">Create your farmer account</p>
+      <div class="auth-form">
+        <div class="af-group">
+          <label>Full Name</label>
+          <div class="af-input-wrap"><span>👤</span><input type="text" id="suName" placeholder="Your name"/></div>
+        </div>
+        <div class="af-group">
+          <label>Email / Phone</label>
+          <div class="af-input-wrap"><span>📧</span><input type="email" id="suEmail" placeholder="you@email.com"/></div>
+        </div>
+        <div class="af-group">
+          <label>Password</label>
+          <div class="af-input-wrap"><span>🔒</span><input type="password" id="suPass" placeholder="Create password"/></div>
+        </div>
+        <button class="af-btn" onclick="doSignup()">Create Account</button>
+        <div class="af-divider"><span>or</span></div>
+        <button class="af-btn-outline" onclick="switchAuth('login')">Back to Login</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     FARM SELECTOR MODAL
+══════════════════════════════════════════ -->
+<div id="farmModal" class="modal-overlay" style="display:none">
+  <div class="farm-modal">
+    <div class="fm-top"><h3>🏡 Select Farm</h3><button onclick="closeFarmModal()">✕</button></div>
+    <p class="fm-sub">Choose a farm to load its data</p>
+    <div id="farmModalList" class="fm-list"></div>
+    <div class="fm-add-wrap">
+      <button class="fm-add-toggle" onclick="toggleAddFarm()">+ Add New Farm</button>
+      <div id="addFarmInner" class="fm-add-inner" style="display:none">
+        <div class="fm-row">
+          <input type="text" id="fnName" class="fm-input" placeholder="Farm Name"/>
+          <input type="text" id="fnLoc"  class="fm-input" placeholder="Location"/>
+        </div>
+        <div class="fm-row">
+          <input type="number" id="fnArea" class="fm-input" placeholder="Area (acres)"/>
+          <select id="fnSoil" class="fm-input">
+            <option value="loamy">Loamy</option><option value="sandy">Sandy</option>
+            <option value="clay">Clay</option><option value="silty">Silty</option>
+          </select>
+        </div>
+        <button class="af-btn" style="margin-top:10px" onclick="addFarm()">Add Farm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     FARM DRAWER (LEFT SLIDE)
+══════════════════════════════════════════ -->
+<div id="farmDrawer" class="drawer">
+  <div class="drawer-hdr">
+    <div class="drawer-farmer">
+      <div class="drawer-avatar">👨‍🌾</div>
+      <div>
+        <div class="drawer-name" id="drawerName">Farmer</div>
+        <div class="drawer-email" id="drawerEmail">demo@farm.com</div>
+      </div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-section-title">MY FARMS</div>
+  <div id="drawerFarmList" class="drawer-farm-list"></div>
+  <button class="drawer-add-btn" onclick="openFarmModal()">+ Add New Farm</button>
+  <div class="drawer-footer">
+    <button class="drawer-menu-item" onclick="goTo('dashboard')">🏠 Dashboard</button>
+    <button class="drawer-menu-item" onclick="goTo('recommendation')">🌱 Crop Recommendation</button>
+    <button class="drawer-menu-item" onclick="goTo('maintenance')">🔧 Maintenance</button>
+    <button class="drawer-menu-item" onclick="goTo('disease')">🔬 Disease Detection</button>
+    <button class="drawer-menu-item danger" onclick="doLogout()">⏻ Logout</button>
+  </div>
+</div>
+<div id="drawerOverlay" class="drawer-overlay" onclick="closeDrawer()"></div>
+
+<!-- ══════════════════════════════════════════
+     MAIN APP
+══════════════════════════════════════════ -->
+<div id="mainApp" style="display:none">
+
+  <!-- TOP NAVBAR -->
+  <nav class="topnav">
+    <div class="tn-left">
+      <button class="tn-menu" onclick="openDrawer()">☰</button>
+      <div class="tn-brand" onclick="goTo('dashboard')">
+        <span class="tn-leaf">🌿</span>
+        <span class="tn-title">SmartAgri</span>
+      </div>
+      <div class="farm-badge" onclick="openFarmModal()">
+        <span class="fb-ico">🏡</span>
+        <span id="activeFarmLabel">Select Farm</span>
+        <span class="fb-arr">▾</span>
+      </div>
+    </div>
+    <div class="tn-right">
+      <div class="notif-wrap">
+        <button class="notif-btn" onclick="toggleNotif()">🔔<span class="notif-dot" id="notifDot"></span></button>
+        <div id="notifDropdown" class="notif-dropdown" style="display:none">
+          <div class="nd-hdr"><strong>Notifications</strong><button onclick="clearNotifs()">Clear</button></div>
+          <div id="notifItems" class="nd-items"></div>
+        </div>
+      </div>
+      <div class="profile-wrap">
+        <button class="profile-btn" onclick="toggleProfile()">
+          <div class="profile-avatar" id="profileAvatar">F</div>
+        </button>
+        <div id="profileDropdown" class="profile-dropdown" style="display:none">
+          <div class="pd-name" id="pdName">Farmer</div>
+          <div class="pd-email" id="pdEmail">demo@farm.com</div>
+          <hr class="pd-hr"/>
+          <button class="pd-item" onclick="switchAccount()">↔ Switch Account</button>
+          <button class="pd-item danger" onclick="doLogout()">⏻ Logout</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ════ PAGE: DASHBOARD ════ -->
+  <section id="page-dashboard" class="page active">
+    <div class="page-inner">
+      <div class="dash-welcome">
+        <div>
+          <h1 class="dash-h1">Good <span id="timeGreet">morning</span>, <span id="welcomeName">Farmer</span>! 👋</h1>
+          <p class="dash-sub">Here's what's happening on your farm today</p>
+        </div>
+        <div class="dash-date" id="dashDate"></div>
+      </div>
+
+      <!-- Weather Forecast Widget -->
+      <div id="dashWeatherCard"></div>
+
+      <!-- Farm Overview KPIs -->
+      <div class="kpi-row" id="dashKpis">
+        <div class="kpi-card green" onclick="goTo('recommendation')">
+          <div class="kc-ico">🌱</div>
+          <div class="kc-val" id="kpiCrop">—</div>
+          <div class="kc-lbl">Active Crop</div>
+        </div>
+        <div class="kpi-card blue" onclick="goTo('maintenance')">
+          <div class="kc-ico">❤️</div>
+          <div class="kc-val" id="kpiHealth">—</div>
+          <div class="kc-lbl">Crop Health</div>
+        </div>
+        <div class="kpi-card amber" onclick="goTo('maintenance')">
+          <div class="kc-ico">📅</div>
+          <div class="kc-val" id="kpiDays">—</div>
+          <div class="kc-lbl">Days to Harvest</div>
+        </div>
+        <div class="kpi-card purple">
+          <div class="kc-ico">📡</div>
+          <div class="kc-val" id="kpiSensor">Live</div>
+          <div class="kc-lbl">Sensor Status</div>
+        </div>
+      </div>
+
+      <!-- 3 Main Module Cards -->
+      <h2 class="sec-title">Core Modules</h2>
+      <div class="module-cards">
+        <div class="mc" onclick="goTo('recommendation')">
+          <div class="mc-top green-grad">
+            <div class="mc-big-ico">🌱</div>
+            <div class="mc-step">Step 1</div>
+          </div>
+          <div class="mc-body">
+            <h3>Crop Recommendation</h3>
+            <p>Upload soil photo → auto-fetch sensor data → get 4–5 best crop recommendations with AI analysis</p>
+            <div class="mc-tags">
+              <span>📸 Soil Scan</span>
+              <span>📡 IoT Sensors</span>
+              <span>🤖 AI Match</span>
+            </div>
+          </div>
+          <div class="mc-footer">Start Now →</div>
+        </div>
+        <div class="mc" onclick="goTo('maintenance')">
+          <div class="mc-top amber-grad">
+            <div class="mc-big-ico">🔧</div>
+            <div class="mc-step">Step 2</div>
+          </div>
+          <div class="mc-body">
+            <h3>Crop Maintenance</h3>
+            <p>Track selected crop lifecycle — irrigation schedule, fertilizer plan, smart alerts with remedies</p>
+            <div class="mc-tags">
+              <span>💧 Irrigation</span>
+              <span>🌿 Fertilizer</span>
+              <span>🔔 Alerts</span>
+            </div>
+          </div>
+          <div class="mc-footer">Monitor →</div>
+        </div>
+        <div class="mc" onclick="goTo('disease')">
+          <div class="mc-top red-grad">
+            <div class="mc-big-ico">🔬</div>
+            <div class="mc-step">Step 3</div>
+          </div>
+          <div class="mc-body">
+            <h3>Disease Detection</h3>
+            <p>Upload leaf photo → CNN detects disease → get severity, cure probability and remedies</p>
+            <div class="mc-tags">
+              <span>📸 Leaf Scan</span>
+              <span>🦠 CNN AI</span>
+              <span>💊 Remedy</span>
+            </div>
+          </div>
+          <div class="mc-footer">Detect Now →</div>
+        </div>
+      </div>
+
+      <!-- Live Sensor Strip -->
+      <h2 class="sec-title">📡 Live Sensor Feed <span class="live-pill">● LIVE</span></h2>
+      <div class="sensor-strip" id="dashSensorStrip">
+        <div class="ss-card" id="ss-N"><div class="ss-ico">🧪</div><div class="ss-val" id="ds-N">—</div><div class="ss-lbl">Nitrogen</div><div class="ss-unit">kg/ha</div></div>
+        <div class="ss-card" id="ss-P"><div class="ss-ico">⚗️</div><div class="ss-val" id="ds-P">—</div><div class="ss-lbl">Phosphorus</div><div class="ss-unit">kg/ha</div></div>
+        <div class="ss-card" id="ss-K"><div class="ss-ico">🔬</div><div class="ss-val" id="ds-K">—</div><div class="ss-lbl">Potassium</div><div class="ss-unit">kg/ha</div></div>
+        <div class="ss-card" id="ss-T"><div class="ss-ico">🌡️</div><div class="ss-val" id="ds-T">—</div><div class="ss-lbl">Temperature</div><div class="ss-unit">°C</div></div>
+        <div class="ss-card" id="ss-H"><div class="ss-ico">🌫️</div><div class="ss-val" id="ds-H">—</div><div class="ss-lbl">Humidity</div><div class="ss-unit">%</div></div>
+        <div class="ss-card" id="ss-M"><div class="ss-ico">💧</div><div class="ss-val" id="ds-M">—</div><div class="ss-lbl">Moisture</div><div class="ss-unit">%</div></div>
+      </div>
+      <div class="sensor-ts" id="dashSensorTs">Tap "Refresh Sensors" to fetch live data</div>
+      <button class="btn-secondary" onclick="autoFetchSensors(); goTo('recommendation')">⚡ Fetch Sensors & Get Crop Recommendation</button>
+
+      <!-- Dashboard Charts -->
+      <div class="dash-charts">
+        <div class="dc-card">
+          <div class="dc-hdr">📊 Disease Frequency (R/ggplot2)</div>
+          <canvas id="dashDiseaseChart" height="200"></canvas>
+        </div>
+        <div class="dc-card">
+          <div class="dc-hdr">🥧 Crop Success Probability</div>
+          <canvas id="dashSuccessChart" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ PAGE: CROP RECOMMENDATION ════ -->
+  <section id="page-recommendation" class="page">
+    <div class="page-inner">
+      <div class="page-hdr">
+        <button class="back-btn" onclick="goTo('dashboard')">← Back</button>
+        <h1>🌱 Crop Recommendation</h1>
+        <p>Scan your soil → system auto-fetches sensor data → AI recommends 4–5 best crops</p>
+      </div>
+
+      <!-- Weather Outlook Recommendation Banner -->
+      <div id="recommendationWeatherBanner"></div>
+
+      <!-- STEP 1: Soil Scan -->
+      <div class="rec-step" id="recStep1">
+        <div class="step-badge">Step 1 of 3</div>
+        <h2 class="step-title">📸 Scan / Upload Soil Photo</h2>
+        <div class="rec-two-col">
+          <div class="card">
+            <div class="card-hdr">Upload Soil Image</div>
+            <div class="card-body">
+              <div class="upload-zone" id="soilZone"
+                   onclick="document.getElementById('soilFileInput').click()"
+                   ondragover="event.preventDefault();this.classList.add('drag')"
+                   ondragleave="this.classList.remove('drag')"
+                   ondrop="handleDrop(event,'soilFileInput','soilImgPreview')">
+                <div id="soilUploadIdle">
+                  <div class="uz-ico">🪱</div>
+                  <div class="uz-title">Click to upload or drag & drop</div>
+                  <div class="uz-sub">JPG · PNG · WEBP · Max 10 MB</div>
+                  <div class="uz-cam">📷 Take Photo or 📁 Choose File</div>
+                </div>
+                <img id="soilImgPreview" class="img-preview" src="" alt="" style="display:none"/>
+              </div>
+              <input type="file" id="soilFileInput" accept="image/*" capture="environment" style="display:none" onchange="previewImg(this,'soilImgPreview','soilZone')"/>
+              <div class="or-divider">— OR choose demo —</div>
+              <select id="soilDemoSel" class="form-select">
+                <option value="">Select demo soil type…</option>
+                <option value="loamy">🌱 Loamy Soil</option>
+                <option value="sandy">🏜️ Sandy Soil</option>
+                <option value="clay">🧱 Clay Soil</option>
+                <option value="silty">💧 Silty Soil</option>
+              </select>
+              <button class="btn-primary w100 mt12" onclick="runSoilAnalysis()">🔍 Analyse Soil</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hdr">Soil Type Reference</div>
+            <div class="card-body">
+              <div class="soil-refs">
+                <div class="soil-ref loamy" onclick="quickSoil('loamy')"><span>🌱</span><div><strong>Loamy</strong><p>Ideal mix · most crops</p></div></div>
+                <div class="soil-ref sandy" onclick="quickSoil('sandy')"><span>🏜️</span><div><strong>Sandy</strong><p>Fast drain · root veg</p></div></div>
+                <div class="soil-ref clay"  onclick="quickSoil('clay')"><span>🧱</span><div><strong>Clay</strong><p>Dense · high nutrients</p></div></div>
+                <div class="soil-ref silty" onclick="quickSoil('silty')"><span>💧</span><div><strong>Silty</strong><p>Fertile · retains water</p></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2: Soil Result + Sensor Auto-Fetch -->
+      <div class="rec-step" id="recStep2" style="display:none">
+        <div class="step-badge">Step 2 of 3</div>
+        <h2 class="step-title">📡 Soil Analysed — Fetching Sensor Data…</h2>
+        <div class="rec-two-col">
+          <!-- Soil Result -->
+          <div class="card">
+            <div class="card-hdr">✅ Soil Classification Result</div>
+            <div class="card-body" id="soilResultBox"></div>
+          </div>
+          <!-- Sensor Data -->
+          <div class="card">
+            <div class="card-hdr">📡 Live IoT Sensor Data <span class="live-pill">● LIVE</span></div>
+            <div class="card-body">
+              <div class="sensor-fetch-status" id="sensorFetchStatus">
+                <div class="fetch-spinner"></div>
+                <span>Fetching sensor data from IoT nodes…</span>
+              </div>
+              <div id="sensorReadingsBox" class="sensor-readings-grid" style="display:none"></div>
+              <div class="sensor-ts" id="sensorTs" style="display:none"></div>
+            </div>
+          </div>
+        </div>
+        <div class="step-actions" style="display:none" id="step2Actions">
+          <button class="btn-primary" onclick="runRecommendation()">🌱 Get Crop Recommendations →</button>
+          <button class="btn-ghost" onclick="resetSoilScan()">← Re-scan Soil</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Crop Recommendations -->
+      <div class="rec-step" id="recStep3" style="display:none">
+        <div class="step-badge">Step 3 of 3</div>
+        <h2 class="step-title">🤖 AI Crop Recommendations</h2>
+        <div class="rec-context-bar" id="recContextBar"></div>
+        <div id="recLoadingBox" class="loading-box" style="display:none">
+          <div class="spinner"></div><p>Random Forest analysing 35 crops…</p>
+        </div>
+        <div id="cropCardsGrid" class="crop-cards-grid"></div>
+        <!-- Charts below recommendations -->
+        <div id="recChartsRow" class="rec-charts-row" style="display:none">
+          <div class="card">
+            <div class="card-hdr">📊 Disease Risk — Top Diseases for Recommended Crops <span class="r-tag">R/ggplot2</span></div>
+            <div class="card-body"><canvas id="recDiseaseBar" height="160"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-hdr">🥧 Crop Success Probability <span class="r-tag">R/ggplot2</span></div>
+            <div class="card-body"><canvas id="recSuccessPie" height="160"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ PAGE: CROP MAINTENANCE ════ -->
+  <section id="page-maintenance" class="page">
+    <div class="page-inner">
+      <div class="page-hdr">
+        <button class="back-btn" onclick="goTo('dashboard')">← Back</button>
+        <h1>🔧 Crop Maintenance</h1>
+        <p>Lifecycle monitoring for your selected crop — from planting to harvest</p>
+      </div>
+      <div id="maintenanceContent">
+        <div class="no-crop-box">
+          <div class="ncb-ico">🌱</div>
+          <h3>No crop selected yet</h3>
+          <p>Go to Crop Recommendation, scan your soil, and select a crop to begin monitoring.</p>
+          <button class="btn-primary" onclick="goTo('recommendation')">🌱 Go to Crop Recommendation →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ PAGE: DISEASE DETECTION ════ -->
+  <section id="page-disease" class="page">
+    <div class="page-inner">
+      <div class="page-hdr">
+        <button class="back-btn" onclick="goTo('dashboard')">← Back</button>
+        <h1>🔬 Disease Detection & Remedy</h1>
+        <p>Upload a leaf photo — CNN model detects disease, severity, cure probability and full remedy</p>
+      </div>
+      <div class="rec-two-col">
+        <div class="card">
+          <div class="card-hdr">📸 Upload Leaf Image</div>
+          <div class="card-body">
+            <div class="upload-zone" id="leafZone"
+                 onclick="document.getElementById('leafFileInput').click()"
+                 ondragover="event.preventDefault();this.classList.add('drag')"
+                 ondragleave="this.classList.remove('drag')"
+                 ondrop="handleDrop(event,'leafFileInput','leafImgPreview')">
+              <div id="leafUploadIdle">
+                <div class="uz-ico">🍃</div>
+                <div class="uz-title">Click to upload leaf image</div>
+                <div class="uz-sub">JPG · PNG · Leaf must be clearly visible</div>
+                <div class="uz-cam">📷 Take Photo or 📁 Choose File</div>
+              </div>
+              <img id="leafImgPreview" class="img-preview" src="" alt="" style="display:none"/>
+            </div>
+            <input type="file" id="leafFileInput" accept="image/*" capture="environment" style="display:none" onchange="previewImg(this,'leafImgPreview','leafZone')"/>
+            <div class="or-divider">— OR select demo —</div>
+            <select id="diseaseDemo" class="form-select">
+              <option value="tomato_blight">🍅 Tomato — Late Blight (CRITICAL)</option>
+              <option value="tomato_healthy">🍅 Tomato — Healthy</option>
+              <option value="corn_blight">🌽 Corn — Northern Leaf Blight</option>
+              <option value="wheat_rust">🌾 Wheat — Stem Rust</option>
+              <option value="grape_mildew">🍇 Grape — Powdery Mildew</option>
+              <option value="potato_late">🥔 Potato — Late Blight</option>
+              <option value="rice_blast">🌾 Rice — Blast Disease</option>
+              <option value="banana_wilt">🍌 Banana — Panama Wilt</option>
+              <option value="mango_anthrac">🥭 Mango — Anthracnose</option>
+              <option value="cotton_curl">🌸 Cotton — Leaf Curl Virus</option>
+              <option value="apple_scab">🍎 Apple — Scab</option>
+              <option value="onion_blotch">🧅 Onion — Purple Blotch</option>
+            </select>
+            <button class="btn-primary w100 mt12" onclick="detectDisease()">🔬 Detect Disease</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr">📋 Detection Result</div>
+          <div class="card-body" id="diseaseResultBox">
+            <div class="empty-state"><div class="es-ico">🍃</div><p>Upload a leaf image to see results</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts row (shown after detection) -->
+      <div id="diseaseChartsRow" class="rec-charts-row" style="display:none">
+        <div class="card">
+          <div class="card-hdr">🥧 Cure Probability <span class="r-tag">R/ggplot2</span></div>
+          <div class="card-body chart-sm"><canvas id="curePieChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-hdr">📊 Severity Distribution <span class="r-tag">R/ggplot2</span></div>
+          <div class="card-body chart-sm"><canvas id="severityBarChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-hdr">📈 Disease Freq by Crop <span class="r-tag">R</span></div>
+          <div class="card-body chart-sm"><canvas id="disFreqChart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Disease Reference -->
+      <div class="card mt16">
+        <div class="card-hdr">📚 Disease Reference Catalogue (30+ Classes)</div>
+        <div class="card-body"><div id="diseaseCatalogue" class="disease-catalogue"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTTOM NAV (mobile) -->
+  <nav class="bottom-nav">
+    <button class="bn-item active" onclick="goTo('dashboard')" id="bn-dashboard">
+      <span>🏠</span><span>Home</span>
+    </button>
+    <button class="bn-item" onclick="goTo('recommendation')" id="bn-recommendation">
+      <span>🌱</span><span>Crops</span>
+    </button>
+    <button class="bn-item" onclick="goTo('maintenance')" id="bn-maintenance">
+      <span>🔧</span><span>Monitor</span>
+    </button>
+    <button class="bn-item" onclick="goTo('disease')" id="bn-disease">
+      <span>🔬</span><span>Disease</span>
+    </button>
+  </nav>
+
+</div><!-- end mainApp -->
+
+<!-- Toast Container -->
+<div id="toastWrap" class="toast-wrap"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

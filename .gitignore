@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+venv/
+.venv/
+env/
+.ipynb_checkpoints/
+
+# Database
+backend/data/*.db
+data/*.db
+
+# Large Model Weights (GitHub has a 100MB limit per file)
+backend/models/*.h5
+backend/models/disease_ensemble/
+
+# Flutter & Dart
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+smartagri/build/
+smartagri/.dart_tool/
+smartagri/.flutter-plugins
+smartagri/.flutter-plugins-dependencies
+smartagri/ios/Flutter/ephemeral/
+
+# IDEs
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp

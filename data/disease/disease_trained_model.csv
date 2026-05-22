@@ -1,0 +1,9 @@
+property,value
+Model Name,DiseaseNet_Custom.h5
+Architecture,MobileNetV2 (Deep Fine-Tuned Transfer Learning)
+Input Size,224x224x3 (RGB)
+Number of Classes,95
+File Size,31.1 MB
+Validation Accuracy,94.2%
+Training Framework,TensorFlow 2.10.0 / Keras
+Status,Active / Loaded

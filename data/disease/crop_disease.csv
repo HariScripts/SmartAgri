@@ -1,0 +1,88 @@
+crop,disease,severity,frequency,probability,season,treatment,pesticide
+Tomato,Late Blight,High,450,0.82,Monsoon,Remove infected leaves; apply copper-based fungicide,Mancozeb 75WP @ 2g/L
+Tomato,Early Blight,Medium,380,0.68,Summer,Improve air circulation; apply chlorothalonil,Chlorothalonil 75WP @ 2g/L
+Tomato,Leaf Mold,Medium,290,0.55,Humid Season,Reduce humidity; apply fungicide spray,Iprodione 50WP @ 1.5g/L
+Tomato,Septoria Leaf Spot,Medium,260,0.50,Monsoon,Avoid overhead watering; apply copper fungicide,Copper Oxychloride @ 3g/L
+Tomato,Mosaic Virus,High,310,0.60,Any,Control aphid vectors; remove infected plants,Imidacloprid 17.8SL @ 0.5ml/L
+Tomato,Healthy,None,0,0.00,Any,No treatment needed,None
+Rice,Blast Disease,High,520,0.78,Monsoon,Apply tricyclazole; reduce nitrogen,Tricyclazole 75WP @ 0.6g/L
+Rice,Bacterial Leaf Blight,High,480,0.75,Monsoon,Drain water; apply copper bactericide,Copper Hydroxide @ 3g/L
+Rice,Brown Spot,Medium,350,0.62,Humid,Apply propiconazole fungicide,Propiconazole 25EC @ 1ml/L
+Rice,Sheath Blight,Medium,320,0.58,Monsoon,Apply hexaconazole fungicide,Hexaconazole 5SC @ 2ml/L
+Rice,Healthy,None,0,0.00,Any,No treatment needed,None
+Wheat,Rust Disease,High,490,0.80,Winter,Apply propiconazole; use resistant varieties,Propiconazole 25EC @ 1ml/L
+Wheat,Powdery Mildew,Medium,340,0.60,Winter,Apply triadimefon; improve spacing,Triadimefon 25WP @ 1g/L
+Wheat,Fusarium Head Blight,High,280,0.52,Monsoon,Apply tebuconazole at heading stage,Tebuconazole 250EW @ 1ml/L
+Wheat,Healthy,None,0,0.00,Any,No treatment needed,None
+Maize,Northern Leaf Blight,High,410,0.72,Monsoon,Apply mancozeb; use resistant hybrids,Mancozeb 75WP @ 2.5g/L
+Maize,Gray Leaf Spot,Medium,295,0.55,Humid,Apply azoxystrobin fungicide,Azoxystrobin 23SC @ 1ml/L
+Maize,Common Rust,Medium,320,0.58,Any,Apply propiconazole at early stage,Propiconazole 25EC @ 1ml/L
+Maize,Healthy,None,0,0.00,Any,No treatment needed,None
+Potato,Early Blight,High,445,0.76,Summer,Apply chlorothalonil before symptoms,Chlorothalonil 75WP @ 2g/L
+Potato,Late Blight,High,500,0.85,Monsoon,Apply metalaxyl+mancozeb; remove debris,Metalaxyl 8% + Mancozeb 64WP @ 2.5g/L
+Potato,Black Scurf,Medium,210,0.45,Any,Treat seed pieces with thiram before planting,Thiram 75WP seed treatment @ 3g/kg
+Potato,Healthy,None,0,0.00,Any,No treatment needed,None
+Grapes,Powdery Mildew,High,395,0.70,Summer,Apply sulphur dust; prune for airflow,Wettable Sulphur 80WP @ 3g/L
+Grapes,Leaf Blight,Medium,265,0.50,Monsoon,Apply copper oxychloride spray,Copper Oxychloride 50WP @ 3g/L
+Grapes,Black Rot,High,310,0.62,Humid,Remove mummified fruit; apply captan,Captan 50WP @ 2g/L
+Grapes,Healthy,None,0,0.00,Any,No treatment needed,None
+Apple,Scab,High,380,0.68,Spring,Apply mancozeb at bud break stage,Mancozeb 75WP @ 2.5g/L
+Apple,Cedar Apple Rust,Medium,255,0.48,Spring,Remove nearby junipers; apply myclobutanil,Myclobutanil 10WP @ 1g/L
+Apple,Black Rot,High,295,0.56,Summer,Prune dead wood; apply captan spray,Captan 50WP @ 2g/L
+Apple,Healthy,None,0,0.00,Any,No treatment needed,None
+Orange,Citrus Canker,High,420,0.74,Monsoon,Apply copper bactericide; prune infected parts,Copper Hydroxide 77WP @ 3g/L
+Orange,Huanglongbing,High,350,0.65,Any,Remove infected trees; control psyllid vectors,Dimethoate 30EC @ 1.5ml/L
+Orange,Healthy,None,0,0.00,Any,No treatment needed,None
+Banana,Panama Wilt,High,460,0.78,Any,Use resistant varieties; soil solarization,No effective fungicide; cultural control
+Banana,Black Sigatoka,High,405,0.72,Humid,Apply propiconazole; remove lower leaves,Propiconazole 25EC @ 1.5ml/L
+Banana,Healthy,None,0,0.00,Any,No treatment needed,None
+Mango,Anthracnose,High,430,0.76,Monsoon,Apply carbendazim at flowering,Carbendazim 50WP @ 1g/L
+Mango,Powdery Mildew,Medium,295,0.55,Winter,Apply sulphur dust at panicle emergence,Wettable Sulphur 80WP @ 3g/L
+Mango,Healthy,None,0,0.00,Any,No treatment needed,None
+Pepper,Bacterial Spot,High,395,0.70,Monsoon,Apply copper bactericide; avoid overhead irrigation,Copper Hydroxide 77WP @ 3g/L
+Pepper,Phytophthora Blight,High,360,0.65,Monsoon,Improve drainage; apply metalaxyl,Metalaxyl 25WP @ 2g/L
+Pepper,Healthy,None,0,0.00,Any,No treatment needed,None
+Soybean,Bacterial Pustule,Medium,265,0.50,Monsoon,Apply copper fungicide; avoid crop rotation,Copper Oxychloride 50WP @ 3g/L
+Soybean,Frogeye Leaf Spot,Medium,235,0.45,Summer,Apply thiophanate-methyl; use resistant varieties,Thiophanate-methyl 70WP @ 1g/L
+Soybean,Healthy,None,0,0.00,Any,No treatment needed,None
+Groundnut,Cercospora Leaf Spot,High,410,0.72,Monsoon,Apply mancozeb at 30 days after sowing,Mancozeb 75WP @ 2g/L
+Groundnut,Rust,High,380,0.68,Monsoon,Apply triadimefon; spray at initial infection,Triadimefon 25WP @ 1g/L
+Groundnut,Healthy,None,0,0.00,Any,No treatment needed,None
+Cotton,Leaf Curl Virus,High,480,0.80,Any,Control whitefly vectors; use resistant varieties,Thiamethoxam 25WG @ 0.3g/L
+Cotton,Bacterial Blight,High,420,0.74,Monsoon,Apply streptomycin; use treated seeds,Streptomycin Sulphate @ 200ppm
+Cotton,Healthy,None,0,0.00,Any,No treatment needed,None
+Onion,Purple Blotch,High,395,0.70,Monsoon,Apply mancozeb; ensure good drainage,Mancozeb 75WP @ 2g/L
+Onion,Downy Mildew,Medium,295,0.55,Humid,Apply metalaxyl+mancozeb; avoid overhead irrigation,Metalaxyl 8%+Mancozeb 64WP @ 2g/L
+Onion,Healthy,None,0,0.00,Any,No treatment needed,None
+Chickpea,Ascochyta Blight,High,365,0.65,Winter,Apply chlorothalonil at first sign,Chlorothalonil 75WP @ 2g/L
+Chickpea,Fusarium Wilt,High,340,0.62,Any,Use resistant varieties; soil treatment,Carbendazim 50WP soil drench @ 1g/L
+Chickpea,Healthy,None,0,0.00,Any,No treatment needed,None
+Cauliflower,Black Rot,High,345,0.62,Monsoon,Apply copper bactericide; use hot-water seed treatment,Copper Hydroxide 77WP @ 3g/L
+Cauliflower,Downy Mildew,Medium,280,0.52,Humid,Apply metalaxyl; improve air circulation,Metalaxyl 25WP @ 2g/L
+Cauliflower,Healthy,None,0,0.00,Any,No treatment needed,None
+Cabbage,Club Root,High,315,0.58,Monsoon,Lime soil to pH 7; use disease-free transplants,No effective fungicide; lime application
+Cabbage,Alternaria Leaf Spot,Medium,255,0.48,Humid,Apply iprodione; practice crop rotation,Iprodione 50WP @ 1.5g/L
+Cabbage,Healthy,None,0,0.00,Any,No treatment needed,None
+Coffee,Leaf Rust,High,445,0.78,Monsoon,Apply copper fungicide; prune for airflow,Copper Oxychloride 50WP @ 3g/L
+Coffee,Berry Borer,High,390,0.70,Post-monsoon,Spray Beauveria bassiana; use alcohol traps,Beauveria bassiana @ 5g/L
+Coffee,Healthy,None,0,0.00,Any,No treatment needed,None
+Tea,Blister Blight,High,430,0.76,Monsoon,Apply copper oxychloride; shade pruning,Copper Oxychloride 50WP @ 3g/L
+Tea,Red Spider Mite,Medium,310,0.58,Summer,Apply dicofol or abamectin,Abamectin 1.8EC @ 0.5ml/L
+Tea,Healthy,None,0,0.00,Any,No treatment needed,None
+Sugarcane,Red Rot,High,415,0.74,Monsoon,Use healthy setts; apply Trichoderma,Carbendazim 50WP @ 1g/L
+Sugarcane,Wilt,High,355,0.63,Any,Use disease-free planting material; hot-water treatment,Hot water treatment at 50°C for 2 hours
+Sugarcane,Healthy,None,0,0.00,Any,No treatment needed,None
+Coconut,Bud Rot,High,400,0.72,Monsoon,Apply Bordeaux mixture in crown,Bordeaux Mixture @ 1% concentration
+Coconut,Leaf Blight,Medium,280,0.52,Summer,Apply copper fungicide; remove dead leaves,Copper Oxychloride 50WP @ 3g/L
+Coconut,Healthy,None,0,0.00,Any,No treatment needed,None
+Lentil,Rust,High,340,0.62,Winter,Apply mancozeb at early stage,Mancozeb 75WP @ 2g/L
+Lentil,Stemphylium Blight,Medium,265,0.50,Humid,Apply iprodione; avoid dense planting,Iprodione 50WP @ 1.5g/L
+Lentil,Healthy,None,0,0.00,Any,No treatment needed,None
+Capsicum,Anthracnose,High,360,0.65,Monsoon,Apply carbendazim; harvest regularly,Carbendazim 50WP @ 1g/L
+Capsicum,Healthy,None,0,0.00,Any,No treatment needed,None
+Brinjal,Phomopsis Blight,High,330,0.60,Monsoon,Apply copper oxychloride; remove infected parts,Copper Oxychloride 50WP @ 3g/L
+Brinjal,Healthy,None,0,0.00,Any,No treatment needed,None
+Peas,Powdery Mildew,High,370,0.66,Winter,Apply sulphur dust at first sign,Wettable Sulphur 80WP @ 3g/L
+Peas,Healthy,None,0,0.00,Any,No treatment needed,None
+Spinach,Downy Mildew,Medium,250,0.47,Humid,Apply metalaxyl; ensure spacing,Metalaxyl 25WP @ 2g/L
+Spinach,Healthy,None,0,0.00,Any,No treatment needed,None
