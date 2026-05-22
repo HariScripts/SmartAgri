@@ -33,10 +33,13 @@ class SensorProvider extends ChangeNotifier {
     notifyListeners();
 
     // Sync saved telemetry to Flask backend database
-    final url = Uri.parse('http://localhost:5000/api/sensor-data');
+    final url = Uri.parse('https://purple-banks-show.loca.lt/api/sensor-data');
     http.post(
       url,
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Bypass-Tunnel-Reminder': 'true',
+      },
       body: jsonEncode({
         'farm_id': farmId,
         'N': data.nitrogen,
@@ -63,8 +66,13 @@ class SensorProvider extends ChangeNotifier {
 
     try {
       // 1. Attempt to fetch real sensor data from Python Flask backend
-      final url = Uri.parse('http://localhost:5000/api/get-sensor-data?farm_id=$_activeFarmId&soil=${_activeCropName?.toLowerCase() ?? "loamy"}');
-      final response = await http.get(url).timeout(const Duration(seconds: 2));
+      final url = Uri.parse('https://purple-banks-show.loca.lt/api/get-sensor-data?farm_id=$_activeFarmId&soil=${_activeCropName?.toLowerCase() ?? "loamy"}');
+      final response = await http.get(
+        url,
+        headers: {
+          'Bypass-Tunnel-Reminder': 'true',
+        },
+      ).timeout(const Duration(seconds: 2));
 
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);

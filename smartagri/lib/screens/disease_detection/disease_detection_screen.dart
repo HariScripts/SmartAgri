@@ -49,7 +49,8 @@ class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
 
     try {
       if (_imageFile != null) {
-        var request = http.MultipartRequest('POST', Uri.parse('http://localhost:5000/api/detect-disease'));
+        var request = http.MultipartRequest('POST', Uri.parse('https://purple-banks-show.loca.lt/api/detect-disease'));
+        request.headers['Bypass-Tunnel-Reminder'] = 'true';
         
         // Since we only have _imageFile in this screen (not _xFile for web), let's read bytes
         if (kIsWeb && _xFile != null) {
