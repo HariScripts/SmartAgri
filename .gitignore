@@ -13,8 +13,8 @@ env/
 backend/data/*.db
 data/*.db
 
-# Large Model Weights (GitHub has a 100MB limit per file)
-backend/models/*.h5
+# Large Model Weights — now tracked so Render can use them
+# backend/models/*.h5
 backend/models/disease_ensemble/
 
 # Flutter & Dart

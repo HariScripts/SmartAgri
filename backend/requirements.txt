@@ -1,8 +1,10 @@
-fastapi
-uvicorn
+flask
+flask-cors
+gunicorn
 numpy
 pillow
 scikit-learn
 pandas
 python-multipart
-opencv-python
+opencv-python-headless
+tensorflow-cpu
