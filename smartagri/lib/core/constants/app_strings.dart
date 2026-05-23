@@ -6,7 +6,7 @@ class AppStrings {
   static const String copyright = '© SmartAgri 2024';
 
   // API Base URL (Change this to your deployed Render/Railway URL when deploying)
-  static const String apiBaseUrl = 'https://purple-banks-show.loca.lt';
+  static const String apiBaseUrl = 'https://smartagri-backend-kraj.onrender.com';
 
   // Auth
   static const String welcome = 'Welcome Back, Farmer';
