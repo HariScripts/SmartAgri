@@ -61,8 +61,25 @@ class AppRouter {
         return _slideRoute(const Step3RecommendationsScreen(), settings);
 
       case cropDetail:
-        final crop = settings.arguments as CropModel;
-        return _slideRoute(CropDetailScreen(crop: crop), settings);
+        final args = settings.arguments;
+        if (args == null || args is! CropModel) {
+          return _slideRoute(
+            Builder(
+              builder: (context) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.of(context).pushReplacementNamed(home);
+                });
+                return const Scaffold(
+                  body: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              },
+            ),
+            settings,
+          );
+        }
+        return _slideRoute(CropDetailScreen(crop: args), settings);
 
       case cropMaintenance:
         return _slideRoute(const CropMaintenanceScreen(), settings);

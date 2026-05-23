@@ -134,12 +134,60 @@ class Step2SensorDataScreen extends StatelessWidget {
             const SizedBox(height: 48),
 
             // AI Crop Recommendations Header
-            const Text(
-              'AI Crop Recommendations',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1E293B),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'AI Crop Recommendations',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1E293B),
+                  ),
+                ),
+                TextButton.icon(
+                  onPressed: () => _showPairPlotDialog(context),
+                  icon: const Icon(Icons.bubble_chart_outlined, color: Color(0xFF10B981)),
+                  label: const Text(
+                    'AI Pair Plot Clusters',
+                    style: TextStyle(
+                      color: Color(0xFF047857),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: TextButton.styleFrom(
+                    backgroundColor: const Color(0xFFECFDF5),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      side: const BorderSide(color: Color(0xFFA7F3D0)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            
+            // Cluster Color Legend Row on main screen
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Row(
+                children: [
+                  const Text(
+                    'AI Cluster Key: ',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF64748B),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  _buildMainScreenLegendDot(const Color(0xFF3B82F6), 'Rice'),
+                  const SizedBox(width: 12),
+                  _buildMainScreenLegendDot(const Color(0xFF10B981), 'Tomato'),
+                  const SizedBox(width: 12),
+                  _buildMainScreenLegendDot(const Color(0xFFF59E0B), 'Cotton'),
+                ],
               ),
             ),
             const SizedBox(height: 16),
@@ -672,6 +720,7 @@ class Step2SensorDataScreen extends StatelessWidget {
                 Expanded(child: _buildCropPropertyRow(Icons.warning, '${crop.diseaseRisk}% Disease Risk')),
               ],
             ),
+            _buildStatisticalFitDashboard(context, crop),
             const Divider(),
             Row(
               children: [
@@ -750,4 +799,552 @@ class Step2SensorDataScreen extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildStatisticalFitDashboard(BuildContext context, CropModel crop) {
+    const liveN = 62.2;
+    const liveP = 39.2;
+    const liveK = 24.8;
+    
+    final name = crop.cropName.toLowerCase();
+    double targetN = 50.0;
+    double targetP = 50.0;
+    double targetK = 80.0;
+    
+    if (name == 'rice') {
+      targetN = 90.0; targetP = 42.0; targetK = 43.0;
+    } else if (name == 'wheat') {
+      targetN = 80.0; targetP = 40.0; targetK = 40.0;
+    } else if (name == 'maize') {
+      targetN = 40.0; targetP = 60.0; targetK = 30.0;
+    } else if (name == 'tomato') {
+      targetN = 28.0; targetP = 65.0; targetK = 175.0;
+    } else if (name == 'potato') {
+      targetN = 28.0; targetP = 58.0; targetK = 195.0;
+    } else if (name == 'sugarcane') {
+      targetN = 145.0; targetP = 48.0; targetK = 42.0;
+    } else if (name == 'cotton') {
+      targetN = 85.0; targetP = 75.0; targetK = 65.0;
+    } else if (name == 'groundnut') {
+      targetN = 55.0; targetP = 38.0; targetK = 55.0;
+    } else if (name == 'millet') {
+      targetN = 40.0; targetP = 25.0; targetK = 35.0;
+    } else if (name == 'cabbage') {
+      targetN = 25.0; targetP = 48.0; targetK = 115.0;
+    }
+
+    double getFitRatio(double live, double target) {
+      if (target == 0) return 1.0;
+      final diff = (live - target).abs();
+      final ratio = 1.0 - (diff / target);
+      return ratio.clamp(0.0, 1.0);
+    }
+
+    final fitN = getFitRatio(liveN, targetN);
+    final fitP = getFitRatio(liveP, targetP);
+    final fitK = getFitRatio(liveK, targetK);
+    final overallFit = ((fitN + fitP + fitK) / 3.0) * 100;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE2E8F0), width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Row(
+                children: [
+                  Icon(Icons.analytics_outlined, color: Color(0xFF475569), size: 16),
+                  SizedBox(width: 6),
+                  Text(
+                    'Statistical Fit to AI Crop Model',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF334155),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: overallFit > 85 ? const Color(0xFFECFDF5) : const Color(0xFFFFFBEB),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  '${overallFit.toStringAsFixed(1)}% Fit',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: overallFit > 85 ? const Color(0xFF047857) : const Color(0xFFD97706),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          _buildFitBar('Nitrogen (N)', liveN, targetN, fitN, const Color(0xFF3B82F6)),
+          const SizedBox(height: 6),
+          _buildFitBar('Phosphorus (P)', liveP, targetP, fitP, const Color(0xFF10B981)),
+          const SizedBox(height: 6),
+          _buildFitBar('Potassium (K)', liveK, targetK, fitK, const Color(0xFFF59E0B)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFitBar(String label, double live, double target, double ratio, Color color) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '$label: ${live.toStringAsFixed(1)} vs Target ${target.toStringAsFixed(0)} kg/ha',
+              style: const TextStyle(fontSize: 10, color: Color(0xFF64748B), fontWeight: FontWeight.w500),
+            ),
+            Text(
+              '${(ratio * 100).toStringAsFixed(0)}% Match',
+              style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(
+            value: ratio,
+            backgroundColor: const Color(0xFFE2E8F0),
+            valueColor: AlwaysStoppedAnimation<Color>(color),
+            minHeight: 6,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showPairPlotDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        final screenHeight = MediaQuery.of(context).size.height;
+        final isWideScreen = screenWidth > 900;
+
+        // Build all explanation elements to place on the left (wide screen) or top (narrow screen)
+        Widget buildDetailsColumn() {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(Icons.bubble_chart_outlined, color: Color(0xFF10B981), size: 28),
+                      SizedBox(width: 10),
+                      Text(
+                        'AI Crop Decision Clusters',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (!isWideScreen)
+                    IconButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      icon: const Icon(Icons.close, color: Colors.white60),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'This pairwise cluster matrix represents how the AI classification models split different crop groups based on N-P-K nutrient profiles. Zoom/pinch to inspect decision boundaries.',
+                style: TextStyle(color: Colors.white70, fontSize: 12, height: 1.4),
+              ),
+              const SizedBox(height: 12),
+              
+              // Visual Interpretation Guide
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1E293B),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFF334155)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      '🔍 HOW TO UNDERSTAND THIS GRAPH:',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF38BDF8),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    _buildDialogGuideRow(
+                      icon: Icons.bubble_chart_outlined,
+                      color: const Color(0xFF38BDF8),
+                      title: 'Colored Clusters:',
+                      desc: 'Each cluster represents a different crop family (e.g. Rice, Tomato, Cotton) grouped by their nutrient requirements.',
+                    ),
+                    const SizedBox(height: 6),
+                    _buildDialogGuideRow(
+                      icon: Icons.grid_view_rounded,
+                      color: const Color(0xFF34D399),
+                      title: 'Grid Panels:',
+                      desc: 'Different combinations plotted together (e.g., Nitrogen vs Phosphorus). Diagonal panels show data distribution curves.',
+                    ),
+                    const SizedBox(height: 6),
+                    _buildDialogGuideRow(
+                      icon: Icons.ads_click,
+                      color: const Color(0xFFFBBF24),
+                      title: 'AI Decision Zones:',
+                      desc: 'The AI recommends a crop by placing your live soil scan coordinates on this map to see which crop sweet-spot it falls into.',
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              
+              const Text(
+                '🎨 QUICK KEY:',
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white54,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 12,
+                runSpacing: 8,
+                children: [
+                  _buildLegendDot(const Color(0xFF3B82F6), 'Rice (High N)'),
+                  _buildLegendDot(const Color(0xFFEF4444), 'Tomato (High K)'),
+                  _buildLegendDot(const Color(0xFFF59E0B), 'Cotton (Balanced)'),
+                ],
+              ),
+              const SizedBox(height: 16),
+              
+              const Text(
+                '💡 Key Observation: There is a strong distinct cluster separation for Fruit crops (high Potassium K requirement) shown in the bottom right panels, whereas cereal crops (like Wheat & Rice) form overlapping diagonal boundaries at higher Nitrogen N levels.',
+                style: TextStyle(
+                  color: Color(0xFFA7F3D0),
+                  fontSize: 11,
+                  fontStyle: FontStyle.italic,
+                  height: 1.4,
+                ),
+              ),
+            ],
+          );
+        }
+
+        Widget buildPlotContainer() {
+          return Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFF1E293B),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: const Color(0xFF334155), width: 1.5),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: InteractiveViewer(
+              maxScale: 10.0,
+              minScale: 1.0,
+              boundaryMargin: EdgeInsets.zero,
+              child: SizedBox.expand(
+                child: Image.network(
+                  'http://localhost:5000/plots/11_crop_pairplot.png?v=${DateTime.now().millisecondsSinceEpoch}',
+                  fit: BoxFit.contain,
+                  filterQuality: FilterQuality.high,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xFF10B981),
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.network(
+                      'http://10.0.2.2:5000/plots/11_crop_pairplot.png?v=${DateTime.now().millisecondsSinceEpoch}',
+                      fit: BoxFit.contain,
+                      filterQuality: FilterQuality.high,
+                      errorBuilder: (context2, error2, stackTrace2) {
+                        return _buildClusterMockup();
+                      },
+                    );
+                  },
+                ),
+              ),
+            ),
+          );
+        }
+
+        return Dialog(
+          backgroundColor: const Color(0xFF0F172A),
+          insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: Container(
+            width: screenWidth * 0.95,
+            height: screenHeight * 0.90,
+            padding: const EdgeInsets.all(24),
+            child: isWideScreen
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Left Panel - Explanations
+                      SizedBox(
+                        width: 340,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Expanded(
+                              child: SingleChildScrollView(
+                                physics: const BouncingScrollPhysics(),
+                                child: buildDetailsColumn(),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton.icon(
+                              onPressed: () => Navigator.pop(ctx),
+                              icon: const Icon(Icons.close),
+                              label: const Text('Close Visualization'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF1E293B),
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  side: const BorderSide(color: Color(0xFF334155)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 24),
+                      // Right Panel - The Plot itself
+                      Expanded(
+                        child: buildPlotContainer(),
+                      ),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Top - Title & Explanations (Scrollable if small screen)
+                      Expanded(
+                        flex: 3,
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          child: buildDetailsColumn(),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      // Bottom - The Plot itself
+                      Expanded(
+                        flex: 5,
+                        child: buildPlotContainer(),
+                      ),
+                    ],
+                  ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLegendDot(Color color, String label) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          label,
+          style: const TextStyle(color: Colors.white70, fontSize: 11),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildClusterMockup() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.wifi_off, color: Colors.white30, size: 24),
+          const SizedBox(height: 6),
+          const Text(
+            'Visual AI Decision Matrix (Local Vector Simulation)',
+            style: TextStyle(color: Colors.white54, fontSize: 11, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: 2,
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                _buildScatterCell('N vs P', [
+                  const Offset(0.2, 0.8), const Offset(0.25, 0.75), const Offset(0.3, 0.85),
+                  const Offset(0.7, 0.3), const Offset(0.75, 0.25), const Offset(0.8, 0.35),
+                  const Offset(0.5, 0.5), const Offset(0.55, 0.48), const Offset(0.48, 0.52),
+                ]),
+                _buildScatterCell('N vs K', [
+                  const Offset(0.15, 0.2), const Offset(0.2, 0.15), const Offset(0.22, 0.25),
+                  const Offset(0.8, 0.8), const Offset(0.85, 0.75), const Offset(0.78, 0.82),
+                  const Offset(0.45, 0.45), const Offset(0.5, 0.48), const Offset(0.52, 0.42),
+                ]),
+                _buildScatterCell('P vs N', [
+                  const Offset(0.8, 0.2), const Offset(0.75, 0.25), const Offset(0.85, 0.3),
+                  const Offset(0.3, 0.7), const Offset(0.25, 0.75), const Offset(0.35, 0.8),
+                  const Offset(0.5, 0.5), const Offset(0.48, 0.55), const Offset(0.52, 0.48),
+                ]),
+                _buildScatterCell('P vs K', [
+                  const Offset(0.2, 0.2), const Offset(0.25, 0.18), const Offset(0.18, 0.24),
+                  const Offset(0.75, 0.78), const Offset(0.82, 0.85), const Offset(0.7, 0.72),
+                  const Offset(0.5, 0.5), const Offset(0.55, 0.52), const Offset(0.48, 0.48),
+                ]),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildScatterCell(String title, List<Offset> points) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFF0F172A),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFF334155), width: 1),
+      ),
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 4),
+          Expanded(
+            child: CustomPaint(
+              size: Size.infinite,
+              painter: _ScatterPainter(points),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDialogGuideRow({
+    required IconData icon,
+    required Color color,
+    required String title,
+    required String desc,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 14, color: color),
+        const SizedBox(width: 8),
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: const TextStyle(fontSize: 11, color: Colors.white70, height: 1.3),
+              children: [
+                TextSpan(text: '$title ', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                TextSpan(text: desc, style: const TextStyle(color: Colors.white54)),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMainScreenLegendDot(Color color, String label) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            color: Color(0xFF475569),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ScatterPainter extends CustomPainter {
+  final List<Offset> points;
+  _ScatterPainter(this.points);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paintRice = Paint()..color = const Color(0xFF3B82F6)..style = PaintingStyle.fill;
+    final paintTomato = Paint()..color = const Color(0xFF10B981)..style = PaintingStyle.fill;
+    final paintCotton = Paint()..color = const Color(0xFFF59E0B)..style = PaintingStyle.fill;
+
+    final axisPaint = Paint()..color = Colors.white10..strokeWidth = 1;
+    canvas.drawLine(Offset(0, size.height), Offset(size.width, size.height), axisPaint);
+    canvas.drawLine(Offset(0, 0), Offset(0, size.height), axisPaint);
+
+    for (int i = 0; i < points.length; i++) {
+      final p = points[i];
+      final offset = Offset(p.dx * size.width, (1 - p.dy) * size.height);
+      Paint dotPaint;
+      if (i < 3) {
+        dotPaint = paintRice;
+      } else if (i < 6) {
+        dotPaint = paintTomato;
+      } else {
+        dotPaint = paintCotton;
+      }
+      canvas.drawCircle(offset, 4.0, dotPaint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

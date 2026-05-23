@@ -263,6 +263,10 @@ def stats():
     s={}; [s.update({d["severity"]:s.get(d["severity"],0)+1}) for d in DIS]
     return jsonify({"success":True,"total_diseases":len(DIS),"crops":len(CROP_KB),"by_severity":s,"accuracy":94.2})
 
+@app.route("/plots/<path:filename>")
+def serve_plot(filename):
+    return send_from_directory(os.path.join(os.path.dirname(__file__), "../r_analysis/output"), filename)
+
 if __name__=="__main__":
     print("SmartAgri v3 Backend — http://localhost:5000")
     app.run(debug=True,host="0.0.0.0",port=5000)
