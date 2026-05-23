@@ -56,7 +56,6 @@ class _Step1SoilScanScreenState extends State<Step1SoilScanScreen> {
     try {
       if (_imageFile != null) {
         var request = http.MultipartRequest('POST', Uri.parse('${AppStrings.apiBaseUrl}/api/predict-soil'));
-        request.headers['Bypass-Tunnel-Reminder'] = 'true';
         if (kIsWeb && _xFile != null) {
            final bytes = await _xFile!.readAsBytes();
            request.files.add(http.MultipartFile.fromBytes('image', bytes, filename: _xFile!.name));

@@ -39,7 +39,6 @@ class SensorProvider extends ChangeNotifier {
       url,
       headers: {
         'Content-Type': 'application/json',
-        'Bypass-Tunnel-Reminder': 'true',
       },
       body: jsonEncode({
         'farm_id': farmId,
@@ -70,9 +69,6 @@ class SensorProvider extends ChangeNotifier {
       final url = Uri.parse('${AppStrings.apiBaseUrl}/api/get-sensor-data?farm_id=$_activeFarmId&soil=${_activeCropName?.toLowerCase() ?? "loamy"}');
       final response = await http.get(
         url,
-        headers: {
-          'Bypass-Tunnel-Reminder': 'true',
-        },
       ).timeout(const Duration(seconds: 2));
 
       if (response.statusCode == 200) {

@@ -51,7 +51,6 @@ class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
     try {
       if (_imageFile != null) {
         var request = http.MultipartRequest('POST', Uri.parse('${AppStrings.apiBaseUrl}/api/detect-disease'));
-        request.headers['Bypass-Tunnel-Reminder'] = 'true';
         
         // Since we only have _imageFile in this screen (not _xFile for web), let's read bytes
         if (kIsWeb && _xFile != null) {
