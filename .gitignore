@@ -36,3 +36,7 @@ smartagri/ios/Flutter/ephemeral/
 *.njsproj
 *.sln
 *.swp
+
+# Temporary Backups & Output
+*.backup
+r_analysis/output/

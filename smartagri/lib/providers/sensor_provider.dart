@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/sensor_data_model.dart';
+import '../core/constants/app_strings.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -33,7 +34,7 @@ class SensorProvider extends ChangeNotifier {
     notifyListeners();
 
     // Sync saved telemetry to Flask backend database
-    final url = Uri.parse('https://purple-banks-show.loca.lt/api/sensor-data');
+    final url = Uri.parse('${AppStrings.apiBaseUrl}/api/sensor-data');
     http.post(
       url,
       headers: {
@@ -66,7 +67,7 @@ class SensorProvider extends ChangeNotifier {
 
     try {
       // 1. Attempt to fetch real sensor data from Python Flask backend
-      final url = Uri.parse('https://purple-banks-show.loca.lt/api/get-sensor-data?farm_id=$_activeFarmId&soil=${_activeCropName?.toLowerCase() ?? "loamy"}');
+      final url = Uri.parse('${AppStrings.apiBaseUrl}/api/get-sensor-data?farm_id=$_activeFarmId&soil=${_activeCropName?.toLowerCase() ?? "loamy"}');
       final response = await http.get(
         url,
         headers: {

@@ -5,8 +5,8 @@ class AppStrings {
   static const String tagline = 'Grow Smarter, Harvest Better';
   static const String copyright = '© SmartAgri 2024';
 
-  // API
-  static const String apiBaseUrl = 'http://localhost:8000';
+  // API Base URL (Change this to your deployed Render/Railway URL when deploying)
+  static const String apiBaseUrl = 'https://purple-banks-show.loca.lt';
 
   // Auth
   static const String welcome = 'Welcome Back, Farmer';

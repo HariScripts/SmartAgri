@@ -544,7 +544,7 @@ class Step3RecommendationsScreen extends StatelessWidget {
               boundaryMargin: EdgeInsets.zero,
               child: SizedBox.expand(
                 child: Image.network(
-                  'http://localhost:5000/plots/11_crop_pairplot.png?v=${DateTime.now().millisecondsSinceEpoch}',
+                  '${AppStrings.apiBaseUrl}/plots/11_crop_pairplot.png?v=${DateTime.now().millisecondsSinceEpoch}',
                   fit: BoxFit.contain,
                   filterQuality: FilterQuality.high,
                   loadingBuilder: (context, child, loadingProgress) {
